@@ -1,5 +1,10 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { getDocs, collection } from 'firebase/firestore';
+import { db } from '../firebase';
 import ShoePing from '../assets/logo/ShoePing.png';
+//  import { CategoryType } from '../utils/types';
 
 const NavigationBar = styled.div`
   display: flex;
@@ -48,14 +53,73 @@ const Authentication = styled.a`
   }
 `;
 
+export type Product = {
+  brand: string;
+  price: number;
+  thumbnail: string;
+  title: string;
+};
+
 function NavBar() {
+  const [running, setRunning] = useState<Product[]>([]); // 러닝화
+  const [slippers, setSlippers] = useState<Product[]>([]); // 슬리퍼
+  const [sneakers, setSneakers] = useState<Product[]>([]); // 스니커즈
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // 러닝화 데이터 가져오기
+      const runningCollectionRef = collection(db, 'running');
+      const runningSnapshot = await getDocs(runningCollectionRef);
+      const runningArray = runningSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Product),
+      }));
+      setRunning(runningArray);
+
+      // 슬리퍼
+      const slippersCollectionRef = collection(db, 'slippers');
+      const slippersSnapshot = await getDocs(slippersCollectionRef);
+      const slippersArray = slippersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Product),
+      }));
+      setSlippers(slippersArray);
+
+      const sneakersCollectionRef = collection(db, 'sneakers');
+      const sneakersSnapshot = await getDocs(sneakersCollectionRef);
+      const sneakersArray = sneakersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Product),
+      }));
+      setSneakers(sneakersArray);
+    };
+
+    fetchData();
+  }, []);
+
+  const runningHandler = () => {
+    navigate('/category', { state: { shoesData: running } });
+  };
+
+  const slippersHandler = () => {
+    navigate('/category', { state: { shoesData: slippers } });
+  };
+
+  const sneakersHandler = () => {
+    navigate('/category', { state: { shoesData: sneakers } });
+  };
+
+  console.log(running, sneakers, slippers);
+
   return (
     <NavigationBar>
       <Logo src={ShoePing} alt="ShoePing Logo" />
       <CategoryUl>
-        <Category>스니커즈</Category>
-        <Category>러닝화</Category>
-        <Category>슬리퍼</Category>
+        <Category onClick={sneakersHandler}>스니커즈</Category>
+        <Category onClick={runningHandler}>러닝화</Category>
+        <Category onClick={slippersHandler}>슬리퍼</Category>
         <Category>구두</Category>
         <Category>부츠</Category>
         <Category>샌들</Category>

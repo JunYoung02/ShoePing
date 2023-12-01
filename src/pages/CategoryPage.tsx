@@ -1,8 +1,7 @@
+import { useLocation, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import shoes from '../assets/shoes/shoes.png';
-//  import { CategoryType } from '../utils/types';
 
 const CategoryContainer = styled.div`
   display: flex;
@@ -91,76 +90,34 @@ const CategoryPriceTitle = styled.span`
 `;
 
 export default function CategoryPage() {
+  const { state } = useLocation();
+  const { shoesData } = state;
+
+  console.log(shoesData);
   return (
     <>
       <NavBar />
       <CategoryContainer>
         <CategoryTitle>스니커즈</CategoryTitle>
         <CategoryItemContainer>
-          <CategoryContentContainer to="/detail">
+          {shoesData.map((shoe) => (
+            <CategoryContentContainer to="/detail">
+              <CategoryImageContainer>
+                <ShoesImage src={shoe.thumbnail} alt="shoes image" />
+              </CategoryImageContainer>
+              <CategoryBrandTitle>{shoe.brand}</CategoryBrandTitle>
+              <CategoryProductTitle>{shoe.title}</CategoryProductTitle>
+              <CategoryPriceTitle>₩ {shoe.price}</CategoryPriceTitle>
+            </CategoryContentContainer>
+          ))}
+          {/* <CategoryContentContainer to="/detail">
             <CategoryImageContainer>
-              <ShoesImage src={shoes} alt="shoes image" />
+              <ShoesImage src={runningshoes.thumbnail} alt="shoes image" />
             </CategoryImageContainer>
-            <CategoryBrandTitle>NIKE</CategoryBrandTitle>
+            <CategoryBrandTitle>NIKe</CategoryBrandTitle>
             <CategoryProductTitle>NIKE W DUNK LOW PRM</CategoryProductTitle>
             <CategoryPriceTitle>₩ 139,000</CategoryPriceTitle>
-          </CategoryContentContainer>
-          <CategoryContentContainer to="/detail">
-            <CategoryImageContainer>
-              <ShoesImage src={shoes} alt="shoes image" />
-            </CategoryImageContainer>
-            <CategoryBrandTitle>NIKE</CategoryBrandTitle>
-            <CategoryProductTitle>NIKE W DUNK LOW PRM</CategoryProductTitle>
-            <CategoryPriceTitle>₩ 139,000</CategoryPriceTitle>
-          </CategoryContentContainer>
-          <CategoryContentContainer to="/detail">
-            <CategoryImageContainer>
-              <ShoesImage src={shoes} alt="shoes image" />
-            </CategoryImageContainer>
-            <CategoryBrandTitle>NIKE</CategoryBrandTitle>
-            <CategoryProductTitle>NIKE W DUNK LOW PRM</CategoryProductTitle>
-            <CategoryPriceTitle>₩ 139,000</CategoryPriceTitle>
-          </CategoryContentContainer>
-          <CategoryContentContainer to="/detail">
-            <CategoryImageContainer>
-              <ShoesImage src={shoes} alt="shoes image" />
-            </CategoryImageContainer>
-            <CategoryBrandTitle>NIKE</CategoryBrandTitle>
-            <CategoryProductTitle>NIKE W DUNK LOW PRM</CategoryProductTitle>
-            <CategoryPriceTitle>₩ 139,000</CategoryPriceTitle>
-          </CategoryContentContainer>
-          <CategoryContentContainer to="/detail">
-            <CategoryImageContainer>
-              <ShoesImage src={shoes} alt="shoes image" />
-            </CategoryImageContainer>
-            <CategoryBrandTitle>NIKE</CategoryBrandTitle>
-            <CategoryProductTitle>NIKE W DUNK LOW PRM</CategoryProductTitle>
-            <CategoryPriceTitle>₩ 139,000</CategoryPriceTitle>
-          </CategoryContentContainer>
-          <CategoryContentContainer to="/detail">
-            <CategoryImageContainer>
-              <ShoesImage src={shoes} alt="shoes image" />
-            </CategoryImageContainer>
-            <CategoryBrandTitle>NIKE</CategoryBrandTitle>
-            <CategoryProductTitle>NIKE W DUNK LOW PRM</CategoryProductTitle>
-            <CategoryPriceTitle>₩ 139,000</CategoryPriceTitle>
-          </CategoryContentContainer>
-          <CategoryContentContainer to="/detail">
-            <CategoryImageContainer>
-              <ShoesImage src={shoes} alt="shoes image" />
-            </CategoryImageContainer>
-            <CategoryBrandTitle>NIKE</CategoryBrandTitle>
-            <CategoryProductTitle>NIKE W DUNK LOW PRM</CategoryProductTitle>
-            <CategoryPriceTitle>₩ 139,000</CategoryPriceTitle>
-          </CategoryContentContainer>
-          <CategoryContentContainer to="/detail">
-            <CategoryImageContainer>
-              <ShoesImage src={shoes} alt="shoes image" />
-            </CategoryImageContainer>
-            <CategoryBrandTitle>NIKE</CategoryBrandTitle>
-            <CategoryProductTitle>NIKE W DUNK LOW PRM</CategoryProductTitle>
-            <CategoryPriceTitle>₩ 139,000</CategoryPriceTitle>
-          </CategoryContentContainer>
+          </CategoryContentContainer> */}
         </CategoryItemContainer>
       </CategoryContainer>
     </>
