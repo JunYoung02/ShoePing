@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import shoes from '../assets/shoes/shoes.png';
 import toggleBtn from '../assets/toggleBtn/toggleBtn.png';
@@ -190,26 +191,28 @@ const SampleImage = styled.img`
 `;
 
 function DetailPage() {
+  const { state } = useLocation();
+  const { shoesDetail } = state;
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  console.log(shoesDetail);
+
   return (
     <>
       <NavBar />
       <ShoesContainer>
         <ShoesImageContainer>
-          <ShoesImage src={shoes} alt="shoes image" />
+          <ShoesImage src={shoesDetail.thumbnail} alt="shoes image" />
         </ShoesImageContainer>
         <ShoesInformation>
-          <Company>NIKE</Company>
+          <Company>{shoesDetail.brand}</Company>
           <ShoesTitleContainer>
-            <ShoesTitle>NIKE W DUNK LOW PRM</ShoesTitle>
-            <ShoesSubTitle>
-              나이키 여성 덩크 로우 프리미엄 빈티지 블랙 앤 화이트
-            </ShoesSubTitle>
+            <ShoesTitle>{shoesDetail.title}</ShoesTitle>
+            <ShoesSubTitle>{shoesDetail.subtitle}</ShoesSubTitle>
           </ShoesTitleContainer>
           <ShoesDetailContainer>
             <ShoesDetailOptionConatiner>
@@ -218,9 +221,9 @@ function DetailPage() {
               <ShoesDetailText>PRICE</ShoesDetailText>
             </ShoesDetailOptionConatiner>
             <ShoesDetailOptionConatiner>
-              <ShoesDetailText>WHITE/BLACK-COCONUT MILK</ShoesDetailText>
-              <ShoesDetailText>FQ8899-100</ShoesDetailText>
-              <ShoesDetailText>₩159,000</ShoesDetailText>
+              <ShoesDetailText>{shoesDetail.color}</ShoesDetailText>
+              <ShoesDetailText>{shoesDetail.styleNo}</ShoesDetailText>
+              <ShoesDetailText>₩{shoesDetail.price}</ShoesDetailText>
             </ShoesDetailOptionConatiner>
           </ShoesDetailContainer>
           <SizeContainer>

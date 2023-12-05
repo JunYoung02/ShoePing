@@ -1,4 +1,4 @@
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import NavBar from '../components/NavBar';
 import shoes from '../assets/shoes/shoes.png';
@@ -31,7 +31,7 @@ const CategoryItemContainer = styled.div`
   gap: 20px; // 셀 간격 조절
 `;
 
-const CategoryContentContainer = styled(Link)`
+const CategoryContentContainer = styled.div`
   display: flex;
   width: 100%;
   height: 22rem;
@@ -90,10 +90,18 @@ const CategoryPriceTitle = styled.span`
 `;
 
 export default function CategoryPage() {
-  const { state } = useLocation();
-  const { shoesData } = state;
+  const navigate = useNavigate();
+  const { state } = useLocation(); // state 속성 추출
+  const { shoesData } = state; // state 객체 내부의 shoesData 속성 추출 후 { shoesData }에 저장
 
-  console.log(shoesData);
+  const categoryClickHandler = (shoe) => {
+    navigate('/detail', { state: { shoesDetail: shoe } });
+    console.log(shoe);
+  };
+
+  // console.log(shoesData.id);
+
+  // console.log(shoesData);
   return (
     <>
       <NavBar />
@@ -101,7 +109,9 @@ export default function CategoryPage() {
         <CategoryTitle>스니커즈</CategoryTitle>
         <CategoryItemContainer>
           {shoesData.map((shoe) => (
-            <CategoryContentContainer to="/detail">
+            <CategoryContentContainer
+              onClick={() => categoryClickHandler(shoe)}
+            >
               <CategoryImageContainer>
                 <ShoesImage src={shoe.thumbnail} alt="shoes image" />
               </CategoryImageContainer>
