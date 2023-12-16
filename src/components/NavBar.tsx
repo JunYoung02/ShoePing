@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../firebase';
+import Login from './Login';
+import SignUp from './SignUp';
 import ShoePing from '../assets/logo/ShoePing.png';
 //  import { CategoryType } from '../utils/types';
 
@@ -68,6 +70,9 @@ function NavBar() {
   const [slippers, setSlippers] = useState<Product[]>([]); // 슬리퍼
   const [sneakers, setSneakers] = useState<Product[]>([]); // 스니커즈
 
+  const [login, setLogin] = useState(false); // 로그인 모달 띄우기
+  const [signUp, setSignUp] = useState(false); // 회원가입 모달 띄우기
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -114,25 +119,47 @@ function NavBar() {
     navigate('/category', { state: { shoesData: sneakers } });
   };
 
+  const loginHandler = () => {
+    setLogin(!login);
+  };
+
+  const signUpHandler = () => {
+    setSignUp(!signUp);
+  };
+
+  const changeModalPage = () => {
+    setLogin(!login);
+    setSignUp(!signUp);
+  };
+
   console.log(running, sneakers, slippers);
 
   return (
-    <NavigationBar>
-      <Logo src={ShoePing} alt="ShoePing Logo" />
-      <CategoryUl>
-        <Category onClick={sneakersHandler}>스니커즈</Category>
-        <Category onClick={runningHandler}>러닝화</Category>
-        <Category onClick={slippersHandler}>슬리퍼</Category>
-        <Category>구두</Category>
-        <Category>부츠</Category>
-        <Category>샌들</Category>
-        <Category>로퍼</Category>
-      </CategoryUl>
-      <AuthenticationDiv>
-        <Authentication>로그인</Authentication>
-        <Authentication>회원가입</Authentication>
-      </AuthenticationDiv>
-    </NavigationBar>
+    <>
+      {login && (
+        <Login onConfirm={loginHandler} changeModal={changeModalPage} />
+      )}
+
+      {signUp && (
+        <SignUp onConfirm={signUpHandler} changeModal={changeModalPage} />
+      )}
+      <NavigationBar>
+        <Logo src={ShoePing} alt="ShoePing Logo" />
+        <CategoryUl>
+          <Category onClick={sneakersHandler}>스니커즈</Category>
+          <Category onClick={runningHandler}>러닝화</Category>
+          <Category onClick={slippersHandler}>슬리퍼</Category>
+          <Category>구두</Category>
+          <Category>부츠</Category>
+          <Category>샌들</Category>
+          <Category>로퍼</Category>
+        </CategoryUl>
+        <AuthenticationDiv>
+          <Authentication onClick={loginHandler}>로그인</Authentication>
+          <Authentication onClick={signUpHandler}>회원가입</Authentication>
+        </AuthenticationDiv>
+      </NavigationBar>
+    </>
   );
 }
 
