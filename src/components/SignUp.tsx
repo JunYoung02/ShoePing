@@ -1,8 +1,8 @@
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ShoePing from '../assets/logo/ShoePing.png';
 import CloseBtn from '../assets/close/close.png';
-import Login from './Login';
 
 const Backdrop = styled.div`
   position: fixed;
@@ -91,24 +91,95 @@ const RedFont = styled.p`
   cursor: pointer;
   font-weight: 900;
 `;
+
 function SignUp(props) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [samePassword, setSamePassword] = useState('');
+  const { onConfirm } = props;
+  const { changeModal } = props;
+  const auth = getAuth();
+
+  const nameChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
+
+  const emailChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const passwordChangeHandler = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const smapePasswordChangeHandler = (event) => {
+    setSamePassword(event.target.value);
+  };
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    if (password !== samePassword) {
+      alert('비밀번호 입력 오류');
+    } else {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          console.log(error.code);
+          console.log(error.message);
+          // ..
+        });
+    }
+  };
+
   return (
     <div>
       <Backdrop />
       <Modal>
-        <Close onClick={props.onConfirm} src={CloseBtn} alt="CloseBtn" />
+        <Close onClick={onConfirm} src={CloseBtn} alt="CloseBtn" />
         <Logo src={ShoePing} alt="ShoePing" />
         <Header>회원가입</Header>
         <Form>
-          <InputBox type="text" placeholder="닉네임" />
-          <InputBox type="text" placeholder="이메일" />
-          <InputBox type="password" placeholder="비밀번호" />
-          <InputBox type="password" placeholder="비밀번호 확인" />
-          <Button type="submit">로그인</Button>
+          <InputBox
+            type="text"
+            placeholder="닉네임"
+            value={name}
+            onChange={nameChangeHandler}
+            required
+          />
+          <InputBox
+            type="text"
+            placeholder="이메일"
+            value={email}
+            onChange={emailChangeHandler}
+            required
+          />
+          <InputBox
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={passwordChangeHandler}
+            required
+          />
+          <InputBox
+            type="password"
+            placeholder="비밀번호 확인"
+            value={samePassword}
+            onChange={smapePasswordChangeHandler}
+            required
+          />
+          <Button type="submit" onClick={onSubmitHandler}>
+            회원가입
+          </Button>
         </Form>
         <FlexRow>
           <YelloFont>이미 회원이신가요?</YelloFont>
-          <RedFont onClick={props.changeModal}>로그인하기</RedFont>
+          <RedFont onClick={changeModal}>로그인하기</RedFont>
         </FlexRow>
       </Modal>
     </div>

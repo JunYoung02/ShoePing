@@ -1,6 +1,6 @@
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import SignUp from './SignUp';
 import ShoePing from '../assets/logo/ShoePing.png';
 import CloseBtn from '../assets/close/close.png';
 
@@ -92,21 +92,63 @@ const RedFont = styled.p`
   font-weight: 900;
 `;
 function Login(props) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { onConfirm } = props;
+  const { changeModal } = props;
+  const auth = getAuth();
+
+  const emailChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const passwordChangeHandler = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user, '로그인 성공');
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage, '로그인 실패');
+      });
+  };
+
   return (
     <div>
       <Backdrop />
       <Modal>
-        <Close onClick={props.onConfirm} src={CloseBtn} alt="CloseBtn" />
+        <Close onClick={onConfirm} src={CloseBtn} alt="CloseBtn" />
         <Logo src={ShoePing} alt="ShoePing" />
         <Header>로그인</Header>
         <Form>
-          <ImputBox type="text" placeholder="이메일" />
-          <ImputBox type="password" placeholder="비밀번호" />
-          <Button type="submit">로그인</Button>
+          <ImputBox
+            type="text"
+            placeholder="이메일"
+            value={email}
+            onChange={emailChangeHandler}
+          />
+          <ImputBox
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={passwordChangeHandler}
+          />
+          <Button type="submit" onClick={onSubmitHandler}>
+            로그인
+          </Button>
         </Form>
         <FlexRow>
           <YelloFont>아직 회원이 아니신기요?</YelloFont>
-          <RedFont onClick={props.changeModal}>회원가입</RedFont>
+          <RedFont onClick={changeModal}>회원가입</RedFont>
         </FlexRow>
       </Modal>
     </div>

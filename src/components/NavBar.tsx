@@ -132,8 +132,6 @@ function NavBar() {
     setSignUp(!signUp);
   };
 
-  console.log(running, sneakers, slippers);
-
   return (
     <>
       {login && (
